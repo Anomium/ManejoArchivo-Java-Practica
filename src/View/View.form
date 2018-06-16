@@ -94,11 +94,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Guardar Imagen"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_GuardarImagenActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_GuardarTexto">
       <Properties>
         <Property name="text" type="java.lang.String" value="Guardar Texto"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_GuardarTextoActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

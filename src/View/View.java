@@ -1,10 +1,15 @@
 package View;
 
 import Controller.GestionArchivo;
+import java.io.File;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 public class View extends javax.swing.JFrame {
     JFileChooser seleccionado = new JFileChooser();
+    File archivo;
     byte[] bytesImg;
+    GestionArchivo gestion = new GestionArchivo();
     public View() {
         initComponents();
     }
@@ -37,8 +42,18 @@ public class View extends javax.swing.JFrame {
         jScrollPane2.setViewportView(txt_Texto);
 
         btn_GuardarImagen.setText("Guardar Imagen");
+        btn_GuardarImagen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_GuardarImagenActionPerformed(evt);
+            }
+        });
 
         btn_GuardarTexto.setText("Guardar Texto");
+        btn_GuardarTexto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_GuardarTextoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,9 +93,55 @@ public class View extends javax.swing.JFrame {
 
     private void btn_AbrirArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AbrirArchivoActionPerformed
         if (seleccionado.showDialog(this, "Abrir archivo") == JFileChooser.APPROVE_OPTION) {
-            
+            archivo = seleccionado.getSelectedFile();
+            if (archivo.canRead()) {
+                if (archivo.getName().endsWith("txt")) {
+                    String contenido = gestion.AbrirTexto(archivo);
+                    txt_Texto.setText(contenido);
+                } else {
+                    if (archivo.getName().endsWith("jpg") || archivo.getName().endsWith("png") || archivo.getName().endsWith("gif")) {
+                        bytesImg = gestion.AbrirImagen(archivo);
+                        lb_Imagen.setIcon(new ImageIcon(bytesImg));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Por favor seleccione un archivo admitido");
+                    }
+                }
+            }
         }
     }//GEN-LAST:event_btn_AbrirArchivoActionPerformed
+
+    private void btn_GuardarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarImagenActionPerformed
+        if (seleccionado.showDialog(this, "Guardar Imagen") == JFileChooser.APPROVE_OPTION) {
+            archivo = seleccionado.getSelectedFile();
+            if (archivo.getName().endsWith("jpg") || archivo.getName().endsWith("png") || archivo.getName().endsWith("gif")) {
+                String respuesta = gestion.GuardarImagen(archivo, bytesImg);
+                if (respuesta != null) {
+                    JOptionPane.showMessageDialog(null, respuesta);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al guardar imagen");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "La imagen se debe guardar en formato de imagen");
+            }
+        }
+    }//GEN-LAST:event_btn_GuardarImagenActionPerformed
+
+    private void btn_GuardarTextoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarTextoActionPerformed
+        if (seleccionado.showDialog(this, "Guardar Texto") == JFileChooser.APPROVE_OPTION) {
+            archivo = seleccionado.getSelectedFile();
+            if (archivo.getName().endsWith("txt")) {
+                String contenido = txt_Texto.getText();
+                String respuesta = gestion.GuardarArchivo(archivo, contenido);
+                if (respuesta != null) {
+                    JOptionPane.showMessageDialog(null, respuesta);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al guardar texto");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El texto se debe guardar en un formato de texto");
+            }
+        }
+    }//GEN-LAST:event_btn_GuardarTextoActionPerformed
 
     /**
      * @param args the command line arguments
